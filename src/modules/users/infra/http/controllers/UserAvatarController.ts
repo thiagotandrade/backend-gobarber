@@ -6,9 +6,9 @@ import UserMap from '@modules/users/mappers/UserMap';
 
 export default class UserAvatarController {
   public async update(request: Request, response: Response): Promise<Response> {
-    const updateUserAvatar = container.resolve(UpdateUserAvatarService);
+    const updateUserAvatarService = container.resolve(UpdateUserAvatarService);
 
-    const user = await updateUserAvatar.execute({
+    const user = await updateUserAvatarService.execute({
       user_id: request.user.id,
       avatarFilename: request.file.filename,
     });
