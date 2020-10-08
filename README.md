@@ -14,6 +14,7 @@
 
 **Regras de Negócio (RN)**
 
+- O usuário pode alterar apenas a sua senha;
 - O link enviado por e-mail para resetar a senha deve expirar em 2h;
 - O usuário precisa confirmar a nova senha ao resetar sua senha;
 
