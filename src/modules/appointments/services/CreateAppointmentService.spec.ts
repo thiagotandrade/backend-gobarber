@@ -17,6 +17,7 @@ describe('CreateAppointment', () => {
     const appointment = await createAppointmentsService.execute({
       date: new Date(),
       provider_id: '123123',
+      user_id: '111111',
     });
 
     expect(appointment).toHaveProperty('id');
@@ -29,12 +30,28 @@ describe('CreateAppointment', () => {
     await createAppointmentsService.execute({
       date: appointmentDate,
       provider_id: '123123',
+      user_id: '111111',
     });
 
     await expect(
       createAppointmentsService.execute({
         date: appointmentDate,
         provider_id: '123123',
+        user_id: '111111',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should not be able to create an appointment on a past date', async () => {
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime();
+    });
+
+    await expect(
+      createAppointmentsService.execute({
+        date: new Date(2020, 4, 10, 11),
+        provider_id: '123123',
+        user_id: '111111',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
