@@ -1,15 +1,20 @@
-// import AppError from '@shared/errors/AppError';
-
+import FakeCacheProvider from '@shared/container/providers/CacheProvider/fakes/FakeCacheProvider';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
+
 import ListProvidersService from './ListProvidersService';
 
 let fakeUsersRepository: FakeUsersRepository;
+let fakeCacheProvider: FakeCacheProvider;
 let listProviders: ListProvidersService;
 
 describe('ListProviders', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
-    listProviders = new ListProvidersService(fakeUsersRepository);
+    fakeCacheProvider = new FakeCacheProvider();
+    listProviders = new ListProvidersService(
+      fakeUsersRepository,
+      fakeCacheProvider,
+    );
   });
 
   it('should be able to list the providers', async () => {
@@ -36,5 +41,21 @@ describe('ListProviders', () => {
     });
 
     expect(users).toEqual([user1, user2]);
+  });
+
+  it('should be able to list the providers from cache', async () => {
+    await fakeCacheProvider.save(`providers-list:user1`, 'Test');
+
+    const save = jest.spyOn(fakeCacheProvider, 'save');
+
+    await listProviders.execute({
+      user_id: 'user2',
+    });
+
+    await listProviders.execute({
+      user_id: 'user2',
+    });
+
+    expect(save).toHaveBeenCalledTimes(1);
   });
 });
