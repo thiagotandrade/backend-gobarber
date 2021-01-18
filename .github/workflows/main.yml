@@ -31,8 +31,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "dist"
-          target: "test"       
+          source: "."
+          target: "~/app/node_deploy"       
        
       # Instalar as dependências do NPM/yarn
       # Executar a build
