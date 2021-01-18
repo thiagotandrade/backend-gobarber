@@ -48,10 +48,8 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: ".,!node_modules"
           target: "~/app/node-deploy"       
-       
-      
-      # Substituir o código existente na pasta "dist" pelo novo código
-      - name: Install dependencies on digital ocean
+     
+      - name: Run production scripts
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -61,24 +59,5 @@ jobs:
           script: |
             cd ~/app/node-deploy/
             yarn
-          
-      - name: Run migrations on digital ocean
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            cd ~/app/node-deploy/
-            ./node-modules/.bin/typeorm/ migration:run
-      
-      - name: Restart Node.js server on digital ocean
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          script: |
-            pm2 restart gobarber-api      
+            ./node_modules/.bin/typeorm/ migration:run
+            pm2 restart gobarber-api
